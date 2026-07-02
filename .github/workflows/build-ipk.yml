@@ -47,7 +47,7 @@ jobs:
           node-version: '20'
 
       - name: 构建前端
-        working-directory: miaomiaowu-src
+        working-directory: miaomiaowu-src/miaomiaowu
         run: |
           npm ci
           npm run build
