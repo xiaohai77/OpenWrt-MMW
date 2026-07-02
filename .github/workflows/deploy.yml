@@ -2,9 +2,19 @@ name: Deploy miaomiaowu Feed
 
 on:
   workflow_dispatch:
+  # ipk 或 apk 打包完成后自动触发一次部署，形成 "上游更新 -> 打包 -> 发布 Release ->
+  # 推送到 Cloudflare Pages" 的全自动链路。两个 workflow 分别完成时都会触发一次，
+  # 属于预期内的重复执行（部署本身是幂等的，直接拉最新 Release 重新发布即可）。
+  workflow_run:
+    workflows:
+      - "Build miaomiaowu ipk (all archs)"
+      - "Build miaomiaowu apk (all archs)"
+    types:
+      - completed
 
 jobs:
   deploy:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-22.04
 
     steps:
