@@ -12,8 +12,7 @@ declare -A GO_TARGETS=(
   [armv7]="linux,arm,7,-"
   [armv6]="linux,arm,6,-"
   [armv5]="linux,arm,5,-"
-  [mips_sf]="linux,mips,-,softfloat"
-  [mipsle_sf]="linux,mipsle,-,softfloat"
+  [riscv64]="linux,riscv64,-,-"
   [x86]="linux,386,-,softfloat"
   [amd64]="linux,amd64,-,-"
 )
@@ -23,8 +22,7 @@ declare -A OPKG_ARCHES=(
   [armv7]="arm_cortex-a7 arm_cortex-a7_neon-vfpv4 arm_cortex-a9 arm_cortex-a9_neon arm_cortex-a15_neon-vfpv4"
   [armv6]="arm_arm1176jzf-s_vfp arm_fa526"
   [armv5]="arm_mpcore arm_xscale"
-  [mips_sf]="mips_24kc mips_4kec mips_mips32"
-  [mipsle_sf]="mipsel_24kc mipsel_74kc mipsel_mips32"
+  [riscv64]="riscv64_generic riscv64"
   [x86]="i386_pentium4 i386_pentium-mmx i386_geode"
   [amd64]="x86_64"
 )
