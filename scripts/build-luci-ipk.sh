@@ -39,6 +39,7 @@ echo "2.0" > "$WORK/debian-binary"
 
 mkdir -p "$OUTDIR"
 OUT="$OUTDIR/${PKG_NAME}_${VERSION}_all.ipk"
-(cd "$WORK" && ar rc "$OUT" debian-binary control.tar.gz data.tar.gz)
+# ---- 最终 ipk = tar.gz 归档 ----
+(cd "$WORK" && tar --numeric-owner --owner=0 --group=0 -czf "$OUT" debian-binary control.tar.gz data.tar.gz)
 
 echo "生成: $OUT"
