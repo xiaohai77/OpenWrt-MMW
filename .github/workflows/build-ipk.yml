@@ -135,3 +135,46 @@ jobs:
             all-ipks/checksums.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-repo:
+    name: 生成并发布 ipk 软件源
+    needs: [build, build-luci]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: all-ipks
+          merge-multiple: true
+
+      - name: 下载 OpenWrt SDK
+        run: |
+          wget -q "https://downloads.openwrt.org/releases/23.05.3/targets/x86/64/openwrt-sdk-23.05.3-x86-64_gcc-12.3.0_musl.Linux-x86_64.tar.xz" -O sdk.tar.xz
+          tar -xf sdk.tar.xz
+          mv openwrt-sdk-* openwrt-sdk
+
+      - name: 生成软件源索引并签名
+        run: |
+          chmod +x scripts/build-ipk-repo.sh
+          echo "${{ secrets.MMW_IPK_SIGN_KEY }}" > /tmp/mmw-ipk-sign.key
+          USIGN_BIN=$(find openwrt-sdk -type f -name usign -path "*/host/bin/*" | head -n1)
+          ./scripts/build-ipk-repo.sh all-ipks site \
+            "$GITHUB_WORKSPACE/openwrt-sdk/scripts/ipkg-make-index.sh" \
+            "$GITHUB_WORKSPACE/$USIGN_BIN" /tmp/mmw-ipk-sign.key
+          shred -u /tmp/mmw-ipk-sign.key 2>/dev/null || rm -f /tmp/mmw-ipk-sign.key
+
+      - name: 拷贝公钥和 install.sh
+        run: |
+          cp keys/miaomiaowu-ipk.pub site/miaomiaowu-ipk.pub
+          cp scripts/install.sh site/install.sh
+
+      - name: 部署到 Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          projectName: miaomiaowu-openwrt
+          directory: site
+          branch: main
