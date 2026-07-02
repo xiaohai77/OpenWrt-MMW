@@ -1,0 +1,83 @@
+name: Check miaomiaowu Upstream
+
+# 每 6 小时检测一次上游 iluobei/miaomiaowu 是否有新 Release，
+# 有的话自动触发 build-ipk.yml 和 build-apk.yml，并把上游的版本号和更新日志原样带过去。
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: '强制触发一次打包，即使版本号没变化'
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: 获取上游最新 Release
+        id: upstream
+        run: |
+          set -e
+          JSON=$(gh api repos/iluobei/miaomiaowu/releases/latest)
+          TAG=$(echo "$JSON" | jq -r '.tag_name')
+          BODY=$(echo "$JSON" | jq -r '.body')
+          VERSION="${TAG#v}"
+
+          if [ -z "$TAG" ] || [ "$TAG" == "null" ]; then
+            echo "::error::没拿到上游最新 release，检查网络或上游仓库状态"
+            exit 1
+          fi
+
+          echo "上游最新版本: $TAG"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+          # 更新日志可能有换行/特殊字符，用 heredoc 形式写入 GITHUB_OUTPUT
+          {
+            echo "body<<MMW_EOF"
+            echo "$BODY"
+            echo "MMW_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: 检查本仓库是否已经打包过这个版本
+        id: check
+        run: |
+          TAG="${{ steps.upstream.outputs.tag }}"
+          COUNT=$(gh api "repos/${{ github.repository }}/releases" --jq "[.[] | select(.tag_name==\"$TAG\")] | length")
+          echo "已存在同名 release 数量: $COUNT"
+          if [ "$COUNT" -gt 0 ] && [ "${{ github.event.inputs.force }}" != "true" ]; then
+            echo "already_built=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "already_built=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 触发 ipk 打包
+        if: steps.check.outputs.already_built == 'false'
+        run: |
+          gh workflow run build-ipk.yml \
+            --repo "${{ github.repository }}" \
+            -f mmw_ref="${{ steps.upstream.outputs.tag }}" \
+            -f version="${{ steps.upstream.outputs.version }}" \
+            -f changelog="${{ steps.upstream.outputs.body }}"
+
+      - name: 触发 apk 打包
+        if: steps.check.outputs.already_built == 'false'
+        run: |
+          gh workflow run build-apk.yml \
+            --repo "${{ github.repository }}" \
+            -f mmw_ref="${{ steps.upstream.outputs.tag }}" \
+            -f version="${{ steps.upstream.outputs.version }}" \
+            -f changelog="${{ steps.upstream.outputs.body }}"
+
+      - name: 无需更新
+        if: steps.check.outputs.already_built == 'true'
+        run: echo "上游版本 ${{ steps.upstream.outputs.tag }} 已经打包过，跳过。"
