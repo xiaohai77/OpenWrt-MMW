@@ -1,4 +1,4 @@
-# OpenWrt-mmw
+# OpenWrt-miaomiaowu
 
 [妙妙屋 (miaomiaowu)](https://github.com/iluobei/miaomiaowu) 的 OpenWrt 软件包 & 软件源仓库。
 
