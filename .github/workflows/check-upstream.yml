@@ -1,8 +1,5 @@
 name: 妙妙屋-自动all
 
-# 每 6 小时检测一次上游 iluobei/miaomiaowu 是否有新 Release。
-# ipk、apk 并发触发打包，互不阻塞——其中一个失败不影响另一个继续跑完；
-# 只要至少有一个成功，就触发 Cloudflare 部署（deploy.yml 本身会跳过没产出的那部分）。
 on:
   schedule:
     - cron: '0 */6 * * *'
@@ -40,7 +37,6 @@ jobs:
 
           RAW_VERSION="${TAG#v}"
 
-          # ipk、apk 都直接用上游原始版本号，跟上游保持一致。
           IPK_VERSION="$RAW_VERSION"
           APK_VERSION="$RAW_VERSION"
 
@@ -61,8 +57,6 @@ jobs:
       - name: 精简更新日志（去掉加群/文档等无关内容）
         id: changelog
         run: |
-          # 简单按关键词过滤掉"加群/文档/discord"这类跟版本内容无关的行，
-          # 只是关键词粗筛，不是语义理解，过滤不干净可以自己再调关键词。
           {
             echo "clean<<MMW_EOF"
             echo "${{ steps.upstream.outputs.body }}" | grep -viE '交流群|加群|QQ群|微信群|文档地址|查看文档|使用文档|discussion|discord' || true
@@ -160,7 +154,6 @@ jobs:
               fi
             fi
 
-            # 没拿到 run id 的那个直接当"跳过"处理，不无限等它
             [ -z "$IPK_ID" ] && IPK_CONCLUSION="skipped"
             [ -z "$APK_ID" ] && APK_CONCLUSION="skipped"
 
