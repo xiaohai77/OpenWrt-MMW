@@ -1,11 +1,4 @@
 #!/bin/bash
-# 架构映射表：一个 go-target 对应一组 OpenWrt opkg Architecture 名称
-# 因为 Go 静态编译不依赖 libc/内核头文件，同一个 go-target 编出的二进制
-# 可以直接复用给多个 opkg 架构名，不需要每个架构单独编译一次。
-#
-# go-target 格式: GOOS,GOARCH,GOARM,GOMIPS  (用 - 占位表示不设置)
-#
-# 用法: source arch-map.sh 后遍历 GO_TARGETS，再查 OPKG_ARCHES_<go_target> 里的架构列表
 
 declare -A GO_TARGETS=(
   [arm64]="linux,arm64,-,-"
