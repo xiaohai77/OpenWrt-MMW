@@ -1,6 +1,4 @@
 #!/bin/bash
-# 用法: build-apk-index.sh <apk二进制路径> <签名私钥pem路径> <公钥所在目录> <目标目录（内含该架构的所有.apk）>
-# 在目标目录下生成签名过的 packages.adb 索引
 set -euo pipefail
 
 APK_BIN="$1"
