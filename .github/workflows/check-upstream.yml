@@ -59,7 +59,7 @@ jobs:
         run: |
           {
             echo "clean<<MMW_EOF"
-            echo "${{ steps.upstream.outputs.body }}" | grep -viE '交流群|加群|QQ群|微信群|文档地址|查看文档|使用文档|discussion|discord' || true
+            echo "${{ steps.upstream.outputs.body }}" | grep -viE '交流群|Changelog|版本|docker|加群|QQ群|微信群|文档地址|查看文档|使用文档|discussion|discord' || true
             echo "MMW_EOF"
           } >> "$GITHUB_OUTPUT"
 
