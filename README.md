@@ -27,7 +27,7 @@
 
 ## 前置要求
 
-- OpenWrt 23.05 及更早 → 使用 `opkg`
+- OpenWrt 24.10 及更早 → 使用 `opkg`
 - OpenWrt 25.12 及更新 → 使用 `apk`
 
 两种包管理器都支持，脚本会自动识别，不用自己判断。
@@ -49,7 +49,7 @@ wget -O - https://miaomiaowu-openwrt.445568.xyz/install.sh | ash
 
 自动识别 opkg 还是 apk、自动识别本机架构、装源、装包一步到位。
 
-安装完成后访问 `http://路由器IP:8080` 使用，或在 LuCI 里找到"妙妙屋"菜单项进行网页配置。
+安装完成后访问 `http://路由器IP:7852` 使用，或在 LuCI 里找到"妙妙屋"菜单项进行网页配置。
 
 ### B. 添加软件源
 
@@ -89,7 +89,7 @@ wget -O - https://miaomiaowu-openwrt.445568.xyz/uninstall.sh | ash
 ```
 config miaomiaowu 'miaomiaowu'
 	option enabled '1'
-	option port '8080'
+	option port '7852'
 	option database_path '/etc/mmw/traffic.db'
 	option log_level 'info'
 ```
