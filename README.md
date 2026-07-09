@@ -1,11 +1,29 @@
-# OpenWrt-妙妙屋
+# 妙妙屋 - 个人Clash订阅管理系统
 
-[妙妙屋 (miaomiaowu)](https://github.com/iluobei/miaomiaowu) 的 OpenWrt 软件包 & 软件源仓库。
+一个轻量级、易部署的Clash订阅管理系统，支持 Nezha、DStatus 和 Komari 探针获取流量信息，导入外部机场节点等功能。
 
-miaomiaowu 本体是一个 Clash 配置订阅管理工具，支持节点管理、生成订阅、导入外部订阅节点、聚合流量、聚合订阅等功能。这个仓库不包含 miaomiaowu 的业务代码，只负责**把上游源码交叉编译成 OpenWrt 路由器能装的软件包，并托管成一个可以 `opkg`/`apk` 直接安装更新的软件源**。
+## 功能特性
 
-- 上游项目：`https://github.com/iluobei/miaomiaowu`
-- 软件源地址：<https://miaomiaowu-openwrt.445568.xyz>
+### 核心功能
+- 📊 流量监控 - 支持探针服务器与外部订阅流量聚合统计
+- 📈 历史流量 - 30 天流量使用趋势图表
+- 🔗 订阅链接 - 展示通过订阅管理上传或导入和生成订阅生成的订阅
+- 🔗 订阅管理 - 上传猫咪配置文件或从其他订阅url导入生成订阅
+- 🎯 生成订阅 - 从导入的节点生成订阅，可视化代理组规则编辑器
+- 📦 节点管理 - 导入个人节点或机场节点，支持添加、编辑、删除代理节点
+- 🔧 生成订阅 - 自定义规则或使用模板快速生成订阅
+- 🎨 代理分组 - 拖拽式代理节点分组配置，支持链式代理
+- 👥 用户管理 - 管理员/普通用户角色区分，订阅权限管理
+- 🌓 主题切换 - 支持亮色/暗色模式
+- 📱 响应式设计 - 不完全适配移动端和桌面端
+
+### 探针支持
+- [Nezha](https://github.com/naiba/nezha) 面板
+- [DStatus](https://github.com/DokiDoki1103/dstatus) 监控
+- [Komari](https://github.com/komari-monitor/komari) 面板
+
+### 体验[Demo](https://demo.miaomiaowu.net)  
+账户/密码: test / test123
 
 ## 前置要求
 
