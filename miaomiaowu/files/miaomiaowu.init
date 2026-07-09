@@ -9,7 +9,7 @@ PROG=/usr/bin/mmw
 
 validate_section_miaomiaowu() {
 	uci_validate_section miaomiaowu miaomiaowu "${1}" \
-		'port:port:8080' \
+		'port:port:7852' \
 		'database_path:string:/etc/mmw/traffic.db' \
 		'log_level:string:info' \
 		'enabled:bool:1'
