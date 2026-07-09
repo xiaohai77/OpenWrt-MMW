@@ -15,7 +15,7 @@ if command -v opkg >/dev/null 2>&1; then
     [ -z "$ARCH" ] && { echo "错误: 无法识别本机架构" >&2; exit 1; }
     echo "识别到架构: $ARCH"
 
-    FEED_LINE="src/gz miaomiaowu $REPO_URL/openwrt-ipk/$ARCH"
+    FEED_LINE="src/gz miaomiaowu $REPO_URL/openwrt-24.10/$ARCH"
 
     wget -q -O /tmp/mmw-ipk.pub "$REPO_URL/miaomiaowu-ipk.pub"
     opkg-key add /tmp/mmw-ipk.pub
@@ -42,7 +42,7 @@ elif command -v apk >/dev/null 2>&1; then
     ARCH=""
     for CAND in $CANDIDATES; do
         echo "尝试架构: $CAND ..."
-        if wget -q -O /tmp/mmw-test.adb "$REPO_URL/openwrt-apk/$CAND/packages.adb" && [ -s /tmp/mmw-test.adb ]; then
+        if wget -q -O /tmp/mmw-test.adb "$REPO_URL/openwrt-25.12/$CAND/packages.adb" && [ -s /tmp/mmw-test.adb ]; then
             ARCH="$CAND"
             rm -f /tmp/mmw-test.adb
             break
@@ -63,7 +63,7 @@ elif command -v apk >/dev/null 2>&1; then
     wget -q -O /etc/apk/keys/miaomiaowu-apk.pem "$REPO_URL/miaomiaowu-apk.pem"
 
     mkdir -p /etc/apk/repositories.d
-    echo "$REPO_URL/openwrt-apk/$ARCH/packages.adb" > /etc/apk/repositories.d/miaomiaowu.list
+    echo "$REPO_URL/openwrt-25.12/$ARCH/packages.adb" > /etc/apk/repositories.d/miaomiaowu.list
 
     apk update || true
 
