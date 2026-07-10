@@ -1,4 +1,4 @@
-Include $(TOPDIR)/rules.mk
+include $(TOPDIR)/rules.mk
 
 PKG_NAME:=miaomiaowu
 
