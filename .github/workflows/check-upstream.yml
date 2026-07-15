@@ -54,7 +54,7 @@ jobs:
             echo "MMW_EOF"
           } >> "$GITHUB_OUTPUT"
 
-      - name: 精简更新日志（去掉加群/文档等无关内容）
+      - name: 更新日志
         id: changelog
         run: |
           {
